@@ -32,9 +32,11 @@ document.addEventListener("drop", async e => {
 
   const data = await readFile(fileData);
 
+  console.groupCollapsed("[toggl-conv]");
   const ubwData = grabRelevantDataFromTogglCsv(data.split("\n"))
     // Make sure entries on the same date get accumulated
     .reduce<IEntry[]>(accumulateSameDayTimeEntries, []);
+  console.groupEnd();
 
   // Using a for loop to support awaiting the previous task before continuing the loop.
   for (const row of ubwData) {
