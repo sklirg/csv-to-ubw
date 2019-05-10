@@ -1,0 +1,17 @@
+# Extension id for local development
+.web-extension-id
+
+# Build output
+dist
+
+# Cache
+.cache
+node_modules
+
+# Test files
+*.csv
+*.tsv
+
+# Environment
+.envrc
+.vscode
