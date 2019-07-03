@@ -47,6 +47,10 @@ document.addEventListener("drop", async e => {
     }));
   console.groupEnd();
 
+  console.group("Source data");
+  console.table(ubwData);
+  console.groupEnd();
+
   // Using a for loop to support awaiting the previous task before continuing the loop.
   for (const row of ubwData) {
     console.group(`${row.description} (${row.workorder}-${row.activity})`);
