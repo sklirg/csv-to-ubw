@@ -2,6 +2,7 @@ import { grabRelevantDataFromTogglCsv } from "./toggl";
 import { IEntry } from "./models";
 import { addWorkOrderFromEntry } from "./ubw";
 import { readFile } from "./utils";
+import { isSameDay } from "date-fns/esm";
 
 export interface IUBWEntry extends IEntry {
   hours: number;
@@ -72,9 +73,11 @@ function accumulateSameDayTimeEntries(
   newEntry: IEntry
 ): IEntry[] {
   const elem = currentEntries.find(
-    elem => elem.description === newEntry.description
+    elem =>
+      elem.description === newEntry.description &&
+      isSameDay(elem.date, newEntry.date)
   );
-  // If we find an element in the current entries with the same description, update it
+  // If we find an element in the current entries with the same description on the same date, update it
   if (elem) {
     return [
       ...currentEntries.filter(
