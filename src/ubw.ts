@@ -23,6 +23,7 @@ export async function addWorkOrder(
 ): Promise<void> {
   if (!document.title.includes("Timeliste")) {
     console.log("Not in timeliste page");
+    return;
   }
 
   const workorder = `${workTask}-${workOrder}`;
