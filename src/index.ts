@@ -3,6 +3,10 @@ import { IEntry } from "./models";
 import { addWorkOrderFromEntry } from "./ubw";
 import { readFile } from "./utils";
 
+export interface IUBWEntry extends IEntry {
+  hours: number;
+}
+
 console.info("[CTU] CSV to UBW extension enabled");
 
 // Overriding dragover event to allow dropping files into the website without redirecting to the dropped file
@@ -33,22 +37,26 @@ document.addEventListener("drop", async e => {
   const data = await readFile(fileData);
 
   console.groupCollapsed("[toggl-conv]");
-  const ubwData = grabRelevantDataFromTogglCsv(data.split("\n"))
+  const ubwData: IUBWEntry[] = grabRelevantDataFromTogglCsv(data.split("\n"))
     // Make sure entries on the same date get accumulated
-    .reduce<IEntry[]>(accumulateSameDayTimeEntries, []);
+    .reduce<IEntry[]>(accumulateSameDayTimeEntries, [])
+    .map(entry => ({
+      ...entry,
+      hours: minutesToWorkHours(entry.minutes)
+    }));
   console.groupEnd();
 
   // Using a for loop to support awaiting the previous task before continuing the loop.
   for (const row of ubwData) {
-    const hours = Math.ceil(row.minutes / 30) * 0.5;
-
     console.group(`${row.description} (${row.workorder}-${row.activity})`);
-    console.debug(`Adding row with ${row.minutes} minutes => ${hours} hours`);
+    console.debug(
+      `Adding row with ${row.minutes} minutes => ${row.hours} hours`
+    );
 
     await addWorkOrderFromEntry(
       row.workorder,
       row.description,
-      hours,
+      row.hours,
       row.date,
       row.activity
     );
@@ -76,4 +84,8 @@ function accumulateSameDayTimeEntries(
     ];
   }
   return [...currentEntries, newEntry];
+}
+
+function minutesToWorkHours(minutes: number): number {
+  return Math.ceil(minutes / 30) * 0.5;
 }
