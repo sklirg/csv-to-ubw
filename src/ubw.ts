@@ -1,6 +1,6 @@
 import isSameDay from "date-fns/esm/isSameDay";
 
-import { sleep } from "./utils";
+import { sleep, escapeQuerySelectorString } from "./utils";
 
 const ADD_WORK_ORDER_BUTTON_SELECTOR = 'a[data-qtip="Legg til arb.oppgave"]';
 
@@ -44,7 +44,7 @@ export async function addWorkOrder(
   }
 
   const existingRowWithSameDescription = document.querySelector(
-    `[data-qtip="${description}"]`
+    `[data-qtip="${escapeQuerySelectorString(description)}"]`
   ) as HTMLElement;
 
   if (existingRowWithSameDescription === null) {
