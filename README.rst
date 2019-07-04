@@ -9,7 +9,11 @@ It works out of the box when downloading detailed reports from Toggl dashboard. 
 Installation
 ------------
 
-Clone the repository and build the project (`(npm | yarn) build`). Load the `dist` folder as a Chrome extension in `chrome://extensions`.
+Clone the repository and build the project. Load the dist folder as a Chrome extension in `<chrome://extensions>`_.
+
+.. code::
+
+  (npm | yarn) build
 
 Contributing
 ------------
