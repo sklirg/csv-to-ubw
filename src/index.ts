@@ -1,8 +1,11 @@
 import { grabRelevantDataFromTogglCsv } from "./toggl";
 import { IEntry } from "./models";
 import { addWorkOrderFromEntry } from "./ubw";
-import { readFile } from "./utils";
-import { isSameDay } from "date-fns/esm";
+import {
+  readFile,
+  minutesToWorkHours,
+  accumulateSameDayTimeEntries
+} from "./utils";
 
 export interface IUBWEntry extends IEntry {
   hours: number;
@@ -71,28 +74,3 @@ document.addEventListener("drop", async e => {
 
   console.info("[CTU] Done entering from dropped CSV!");
 });
-
-function accumulateSameDayTimeEntries(
-  currentEntries: IEntry[],
-  newEntry: IEntry
-): IEntry[] {
-  const elem = currentEntries.find(
-    elem =>
-      elem.description === newEntry.description &&
-      isSameDay(elem.date, newEntry.date)
-  );
-  // If we find an element in the current entries with the same description on the same date, update it
-  if (elem) {
-    return [
-      ...currentEntries.filter(
-        elem => elem.description !== newEntry.description
-      ),
-      { ...elem, minutes: elem.minutes + newEntry.minutes }
-    ];
-  }
-  return [...currentEntries, newEntry];
-}
-
-function minutesToWorkHours(minutes: number): number {
-  return Math.ceil(minutes / 30) * 0.5;
-}

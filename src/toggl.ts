@@ -145,7 +145,7 @@ function getWorkOrder(entry: string): string {
   return workOrderMatch[0].replace("ordre:", "");
 }
 
-function cleanDescription(description: string): string {
+export function cleanDescription(description: string): string {
   return description.replace(/[&"]/g, "");
 }
 
