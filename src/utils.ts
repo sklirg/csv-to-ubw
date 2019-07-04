@@ -15,24 +15,3 @@ export async function readFile(file: File): Promise<string> {
     };
   });
 }
-
-// Iterate through every character in the string and maybe apply character escapes
-export function escapeQuerySelectorString(querySelector: string) {
-  return [...querySelector]
-    .map(maybeReplaceCharacterWithEscapedCharacter)
-    .join("");
-}
-
-function maybeReplaceCharacterWithEscapedCharacter(char: string): string {
-  const replaces = [["&", "&amp;"]];
-  const replaceChars = replaces.map(x => x[0]);
-
-  const indexOfReplacement = replaceChars.indexOf(char);
-
-  return indexOfReplacement === -1
-    ? char
-    : char.replace(
-        replaceChars[indexOfReplacement][0],
-        replaceChars[indexOfReplacement][1]
-      );
-}

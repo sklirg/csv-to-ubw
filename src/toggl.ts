@@ -26,7 +26,7 @@ export function grabRelevantDataFromTogglCsv(data: string[]) {
 function getRelevantData(entry: string[], indices: IWorkOrderIndices): IEntry {
   console.debug("[toggl-convert] Mapping entry", entry);
 
-  const description = entry[indices.descriptionIndex];
+  const description = cleanDescription(entry[indices.descriptionIndex]);
   const activityMatch = entry[indices.tagsIndex].match(/aktivitet:(\d+)/);
 
   console.group(`[toggl-convert] ${description}`);
@@ -143,6 +143,10 @@ function getWorkOrder(entry: string): string {
   console.debug("Matched for work order", workOrderMatch);
 
   return workOrderMatch[0].replace("ordre:", "");
+}
+
+function cleanDescription(description: string): string {
+  return description.replace(/[&"]/g, "");
 }
 
 interface IWorkOrderIndices {
